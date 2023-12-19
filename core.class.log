@@ -1,0 +1,70 @@
+[handleMsg]:  {
+  key: {
+    remoteJid: '51986025884@s.whatsapp.net',
+    fromMe: false,
+    id: '3EB0F8A4B7A693035CF44D',
+    participant: undefined
+  },
+  messageTimestamp: 1702944931,
+  pushName: 'Alejandra',
+  broadcast: false,
+  message: Message {
+    extendedTextMessage: ExtendedTextMessage {
+      text: 'hola1',
+      contextInfo: [ContextInfo],
+      inviteLinkGroupTypeV2: 0
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  body: 'hola1',
+  from: '51986025884'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_47abcd2c-8186-47bf-bf00-baedabab544c',
+  keyword: 'key_86ac311f-ca06-49c9-8f7d-e5f2ee77adad',
+  answer: '🙌 Gracias por comunicarse con *Retina Care*\n' +
+    'Servicio de Envío de Evaluaciones Médicas\n' +
+    'diabetes.  Que desea hacer hoy?',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: false
+  },
+  refSerialize: 'b038e558bd8390579ccbf2d2fcad01e7'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_258734f6-9905-453d-a470-702e56e6d972',
+  keyword: 'ans_47abcd2c-8186-47bf-bf00-baedabab544c',
+  answer: 'Porfavor eniva el numero de su eleccion\n' +
+    '1️⃣ Recibir mi evaluacion por whatssap\n' +
+    '2️⃣ Hablar con alguien en recepcion\n' +
+    '3️⃣ Salir',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object]
+    ],
+    keyword: {},
+    callback: false
+  },
+  refSerialize: 'b91e1ad5431e8a0631a05e6cd02dc59e'
+}
