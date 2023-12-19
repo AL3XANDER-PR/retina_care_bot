@@ -18,6 +18,8 @@ const MYSQL_DB_USER = "root";
 const MYSQL_DB_PASSWORD = "6b5CeF6GCAgegBbE-hC2ggG-23EEaChd";
 const MYSQL_DB_NAME = "railway";
 const MYSQL_DB_PORT = "17929";
+const BASE_URL = "https://nodejs-production-6c72.up.railway.app/api/usuario/";
+// const BASE_URL = "http://localhost:3007/api/usuario/";
 
 /**
  * Aqui declaramos los flujos hijos, los flujos se declaran de atras para adelante, es decir que si tienes un flujo de este tipo:
@@ -37,7 +39,7 @@ const getPdf = async ({ name, ssn }) => {
   try {
     const { data } = await axios({
       method: "GET",
-      url: "http://localhost:3007/api/usuario/",
+      url: BASE_URL,
       params: { name, ssn },
     });
     console.log(data);
