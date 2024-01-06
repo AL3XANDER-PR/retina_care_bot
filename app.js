@@ -1,39 +1,37 @@
+/* eslint-disable bot-whatsapp/func-prefix-goto-flow-return */
+/* eslint-disable bot-whatsapp/func-prefix-dynamic-flow-await */
+/* eslint-disable bot-whatsapp/func-prefix-state-update-await */
 const {
   createBot,
   createProvider,
   createFlow,
   addKeyword,
+  EVENTS,
 } = require("@bot-whatsapp/bot");
 
 const QRPortalWeb = require("@bot-whatsapp/portal");
 const BaileysProvider = require("@bot-whatsapp/provider/baileys");
 const MySQLAdapter = require("@bot-whatsapp/database/mysql");
 const { default: axios } = require("axios");
+const { delay } = require("@whiskeysockets/baileys");
 
 /**
  * Declaramos las conexiones de MySQL
  */
 const MYSQL_DB_HOST = "viaduct.proxy.rlwy.net";
 const MYSQL_DB_USER = "root";
-const MYSQL_DB_PASSWORD = "6b5CeF6GCAgegBbE-hC2ggG-23EEaChd";
+const MYSQL_DB_PASSWORD = "4b6BdBe5GDfhd4afGBCGDd22cAgEg5g5";
 const MYSQL_DB_NAME = "railway";
-const MYSQL_DB_PORT = "17929";
-const BASE_URL = "https://nodejs-production-6c72.up.railway.app/api/usuario/";
+const MYSQL_DB_PORT = "40897";
+const BASE_URL = "https://nodejs-production-b648.up.railway.app/api/usuario/";
+
+// const MYSQL_DB_HOST = "localhost";
+// const MYSQL_DB_USER = "root";
+// const MYSQL_DB_PASSWORD = "";
+// const MYSQL_DB_NAME = "bot";
+// const MYSQL_DB_PORT = "";
+// // const BASE_URL = "https://nodejs-production-b648.up.railway.app/api/usuario/";
 // const BASE_URL = "http://localhost:3007/api/usuario/";
-
-/**
- * Aqui declaramos los flujos hijos, los flujos se declaran de atras para adelante, es decir que si tienes un flujo de este tipo:
- *
- *          Menu Principal
- *           - SubMenu 1
- *             - Submenu 1.1
- *           - Submenu 2
- *             - Submenu 2.1
- *
- * Primero declaras los submenus 1.1 y 2.1, luego el 1 y 2 y al final el principal.
- */
-
-// const myState = state.getMyState();
 
 const getPdf = async ({ name, ssn }) => {
   try {
@@ -42,7 +40,7 @@ const getPdf = async ({ name, ssn }) => {
       url: BASE_URL,
       params: { name, ssn },
     });
-    console.log(data);
+    // console.log("💻 - file: app.js:43 - getPdf - data:", data);
 
     return data;
   } catch (e) {
@@ -50,67 +48,80 @@ const getPdf = async ({ name, ssn }) => {
   }
 };
 
-const flowOp1 = addKeyword(["1", "uno"])
+const Op1 = addKeyword(
+  "1",
+  "uno",
+  "Recibir mi evaluacion",
+  "recibir mi evaluacion por whastapp"
+)
   .addAnswer(
-    "Gracias, por favor ingrese su nombre y apellido paterno",
+    "Porfavor Ingrese su Nombre y Apellidos",
     { capture: true },
-    async (ctx, { flowDynamic, state }) => {
-      await state.update({ name: ctx.body });
-    }
-  )
-  .addAnswer(
-    `Ahora Ingresa sus ultimos 4 digitos de su seguro social`,
-    {
-      capture: true,
-    },
-    async (ctx, { flowDynamic, state }) => {
-      await state.update({ ssn: ctx.body });
-    }
-  )
-  .addAnswer(
-    [
-      "Bienvenido desea recibir su evaluacion por este medio?",
-      "1️⃣ Si",
-      "2️⃣ No",
-    ],
-    { capture: true },
-    async (ctx, { flowDynamic, state, endFlow }) => {
-      if (ctx.body === "1") {
-        const myState = state.getMyState();
-        const pdf = await getPdf({ name: myState.name, ssn: myState.ssn });
-        console.log(pdf);
-        await flowDynamic([
-          {
-            body: " ctx.body",
-            media: pdf,
-          },
-        ]);
-        await flowDynamic("Aqui tienes tu PDF");
-      } else {
-        const myState = state.getMyState();
-        return await flowDynamic(
-          `Gracias *${myState.name}*! Por cominicarse con el bot de Retinca Care:*`
+    async (ctx, { fallBack, state }) => {
+      const soloTexto = "[a-zA-Z]+$";
+      if (!ctx.body.trim().match(soloTexto)) {
+        return fallBack(
+          `Tu Nombre: *${ctx.body.trim()}* No debe tener Numeros.`
         );
       }
+      await state.update({ name: ctx.body.trim() });
     }
-    // [option1]
+  )
+  .addAnswer(
+    "Ahora Necesito los 4 ultimos digitos de tu SSN",
+    { capture: true },
+    async (ctx, { fallBack, state }) => {
+      const soloNumeros = /^([0-9])*$/;
+      if (!ctx.body.trim().match(soloNumeros)) {
+        return fallBack(`Tu SSN: *${ctx.body.trim()}* Solo deben ser Numeros.`);
+      }
+      console.log(ctx.body.trim().length);
+      if (ctx.body.trim().length !== 4) {
+        return fallBack(
+          `Tu SSN: *${ctx.body.trim()}* Solo debe tener 4 Digitos.`
+        );
+      }
+      await state.update({ ssn: ctx.body.trim() });
+    }
+  )
+  .addAnswer("Gracias por tu informacion, ahora consultare tu datos!!")
+  .addAnswer(
+    "Un Momento porfavor",
+    null,
+    async (_, { fallBack, state, flowDynamic }) => {
+      try {
+        const myState = state.getMyState();
+        const { data } = await getPdf({
+          name: myState.name,
+          ssn: myState.ssn,
+        });
+        if (data) {
+          console.log("💻 - se encontro informacion:", data.url_format);
+          return flowDynamic([
+            { media: data.url_format, body: "PDF" },
+            {
+              body: `Gracias ${data.firstName} ${data.lastName} por utilizar el Bot de Retina Care.`,
+            },
+          ]);
+        } else {
+          return flowDynamic([
+            {
+              body: `Estimado ${myState.name} No se encontraron sus datos.`,
+            },
+            {
+              body: `Gracis Por utilizar el Bot de Retina Care`,
+            },
+          ]);
+        }
+
+        // return flowDynamic([{ media: data, body: "PDF" }]);
+      } catch (error) {
+        return flowDynamic("Algo paso , consulte con un agente");
+      }
+    }
   );
 
-const flowOp2 = addKeyword(["2"]).addAnswer(["Opcion en desarrollo..."]);
-const flowOp3 = addKeyword(["3"]).addAnswer(["Opcion en desarrollo..."]);
-
-const saludos = [
-  "Hola",
-  "hola",
-  "ola",
-  "HOLA",
-  "Buenos Dias",
-  "Buenas Noches",
-  "Buenas Tardes",
-  "Buenas",
-];
-
-const flowPrincipal = addKeyword(["Hola1"])
+const flujoPrincipal = addKeyword("saludo")
   .addAnswer([
     "🙌 Gracias por comunicarse con *Retina Care*",
     "Servicio de Envío de Evaluaciones Médicas",
@@ -118,14 +129,20 @@ const flowPrincipal = addKeyword(["Hola1"])
   ])
   .addAnswer(
     [
-      "Porfavor eniva el numero de su eleccion",
-      "1️⃣ Recibir mi evaluacion por whatssap",
-      "2️⃣ Hablar con alguien en recepcion",
+      "Porfavor enviar el numero de su eleccion",
+      "1️⃣ Recibir mi evaluacion por whatssap(en desarrollo)",
+      "2️⃣ Hablar con alguien en recepcion (en desarrollo)",
       "3️⃣ Salir",
     ],
-    null,
-    null,
-    [flowOp1, flowOp2, flowOp3]
+    { capture: true },
+    async (ctx, { fallBack }) => {
+      if (!["1", "2", "3"].includes(ctx.body)) {
+        return fallBack(
+          `Porfavor Seleccione una opcion Correcta!!\n 1️⃣ Recibir mi evaluacion por whatssap\n 2️⃣ Hablar con alguien en recepcion\n 3️⃣ Salir`
+        );
+      }
+    },
+    [Op1]
   );
 
 const main = async () => {
@@ -136,7 +153,7 @@ const main = async () => {
     password: MYSQL_DB_PASSWORD,
     port: MYSQL_DB_PORT,
   });
-  const adapterFlow = createFlow([flowPrincipal]);
+  const adapterFlow = createFlow([flujoPrincipal]);
   const adapterProvider = createProvider(BaileysProvider);
   createBot({
     flow: adapterFlow,

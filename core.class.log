@@ -2,15 +2,15 @@
   key: {
     remoteJid: '51986025884@s.whatsapp.net',
     fromMe: false,
-    id: '3EB0F8A4B7A693035CF44D',
+    id: '3EB035EB1D4F6BF720A923',
     participant: undefined
   },
-  messageTimestamp: 1702944931,
+  messageTimestamp: 1704557284,
   pushName: 'Alejandra',
   broadcast: false,
   message: Message {
     extendedTextMessage: ExtendedTextMessage {
-      text: 'hola1',
+      text: 'saludo',
       contextInfo: [ContextInfo],
       inviteLinkGroupTypeV2: 0
     },
@@ -19,12 +19,36 @@
       deviceListMetadataVersion: 2
     }
   },
-  body: 'hola1',
+  body: 'saludo',
+  from: '51986025884'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '51986025884@s.whatsapp.net',
+    fromMe: false,
+    id: '3EB098DD8B95F821F7F7D4',
+    participant: undefined
+  },
+  messageTimestamp: 1704557300,
+  pushName: 'Alejandra',
+  broadcast: false,
+  message: Message {
+    extendedTextMessage: ExtendedTextMessage {
+      text: 'saludo',
+      contextInfo: [ContextInfo],
+      inviteLinkGroupTypeV2: 0
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  body: 'saludo',
   from: '51986025884'
 }
 [QUEUE_SE_ENVIO]:  {
-  ref: 'ans_47abcd2c-8186-47bf-bf00-baedabab544c',
-  keyword: 'key_86ac311f-ca06-49c9-8f7d-e5f2ee77adad',
+  ref: 'ans_86c164a8-0d98-4439-a12f-fb1a9bb68c40',
+  keyword: 'key_50b9b302-b0f7-4db2-908d-465d9710f753',
   answer: '🙌 Gracias por comunicarse con *Retina Care*\n' +
     'Servicio de Envío de Evaluaciones Médicas\n' +
     'diabetes.  Que desea hacer hoy?',
@@ -40,15 +64,141 @@
     keyword: {},
     callback: false
   },
-  refSerialize: 'b038e558bd8390579ccbf2d2fcad01e7'
+  refSerialize: '42b27e06e2aa54fb0e49dfca2e640832'
 }
 [QUEUE_SE_ENVIO]:  {
-  ref: 'ans_258734f6-9905-453d-a470-702e56e6d972',
-  keyword: 'ans_47abcd2c-8186-47bf-bf00-baedabab544c',
+  ref: 'ans_8c9c1d59-d094-4486-be94-9474c6fe09bc',
+  keyword: 'ans_86c164a8-0d98-4439-a12f-fb1a9bb68c40',
   answer: 'Porfavor eniva el numero de su eleccion\n' +
-    '1️⃣ Recibir mi evaluacion por whatssap\n' +
-    '2️⃣ Hablar con alguien en recepcion\n' +
+    '1️⃣ Recibir mi evaluacion por whatssap(en desarrollo)\n' +
+    '2️⃣ Hablar con alguien en recepcion (en desarrollo)\n' +
     '3️⃣ Salir',
+  options: {
+    media: null,
+    buttons: [],
+    capture: true,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [ [Object], [Object], [Object], [Object], [Object] ],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '67b271f9e73687fe9e2f0e5b0065a293'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '51986025884@s.whatsapp.net',
+    fromMe: false,
+    id: '3EB0B21B0D22EF79E423A4',
+    participant: undefined
+  },
+  messageTimestamp: 1704557314,
+  pushName: 'Alejandra',
+  broadcast: false,
+  message: Message {
+    extendedTextMessage: ExtendedTextMessage {
+      text: '1',
+      contextInfo: [ContextInfo],
+      inviteLinkGroupTypeV2: 0
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  body: '1',
+  from: '51986025884'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_49a436d4-27cb-488f-9c54-220121cde9b0',
+  keyword: 'key_16535577-efd8-4230-987c-dc2b55356a94',
+  answer: 'Porfavor Ingrese su Nombre y Apellidos',
+  options: {
+    media: null,
+    buttons: [],
+    capture: true,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '15b7628b83759bc460501aa54a7806b3'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '51986025884@s.whatsapp.net',
+    fromMe: false,
+    id: '3EB062910D0830851C83EA',
+    participant: undefined
+  },
+  messageTimestamp: 1704557323,
+  pushName: 'Alejandra',
+  broadcast: false,
+  message: Message {
+    extendedTextMessage: ExtendedTextMessage {
+      text: 'Alex Ponte',
+      contextInfo: [ContextInfo],
+      inviteLinkGroupTypeV2: 0
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  body: 'Alex Ponte',
+  from: '51986025884'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_cd61670a-31fb-4a2e-b55b-53683926a7f0',
+  keyword: 'ans_49a436d4-27cb-488f-9c54-220121cde9b0',
+  answer: 'Ahora Necesito los 4 ultimos digitos de tu SSN',
+  options: {
+    media: null,
+    buttons: [],
+    capture: true,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: 'fe671e65932b37fbbd3d95c671b5dc6a'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '51986025884@s.whatsapp.net',
+    fromMe: false,
+    id: '3EB013BEFB0F2FD8338143',
+    participant: undefined
+  },
+  messageTimestamp: 1704557371,
+  pushName: 'Alejandra',
+  broadcast: false,
+  message: Message {
+    extendedTextMessage: ExtendedTextMessage {
+      text: '1234',
+      contextInfo: [ContextInfo],
+      inviteLinkGroupTypeV2: 0
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  body: '1234',
+  from: '51986025884'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_c5ac0ba2-b627-4ded-9fe7-26765095d1ca',
+  keyword: 'ans_cd61670a-31fb-4a2e-b55b-53683926a7f0',
+  answer: 'Gracias por tu informacion, ahora consultare tu datos!!',
   options: {
     media: null,
     buttons: [],
@@ -57,14 +207,27 @@
     delay: 0,
     idle: null,
     ref: null,
-    nested: [
-      [Object], [Object],
-      [Object], [Object],
-      [Object], [Object],
-      [Object], [Object]
-    ],
+    nested: [],
     keyword: {},
     callback: false
   },
-  refSerialize: 'b91e1ad5431e8a0631a05e6cd02dc59e'
+  refSerialize: '6c48687c20bbba48bab93d70f9d6c344'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_226aa151-6b03-4841-80c5-7ad8a936aa18',
+  keyword: 'ans_c5ac0ba2-b627-4ded-9fe7-26765095d1ca',
+  answer: 'Un Momento porfavor',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '25b2799fcfa57357ce7cd0edd18d851d'
 }
