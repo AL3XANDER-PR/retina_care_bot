@@ -1,6 +1,3 @@
-/* eslint-disable bot-whatsapp/func-prefix-goto-flow-return */
-/* eslint-disable bot-whatsapp/func-prefix-dynamic-flow-await */
-/* eslint-disable bot-whatsapp/func-prefix-state-update-await */
 const {
   createBot,
   createProvider,
@@ -13,7 +10,7 @@ const QRPortalWeb = require("@bot-whatsapp/portal");
 const BaileysProvider = require("@bot-whatsapp/provider/baileys");
 const MySQLAdapter = require("@bot-whatsapp/database/mysql");
 const { default: axios } = require("axios");
-const { delay } = require("@whiskeysockets/baileys");
+// const { delay } = require("@whiskeysockets/baileys");
 
 /**
  * Declaramos las conexiones de MySQL
@@ -30,7 +27,6 @@ const BASE_URL = "https://nodejs-production-b648.up.railway.app/api/usuario/";
 // const MYSQL_DB_PASSWORD = "";
 // const MYSQL_DB_NAME = "bot";
 // const MYSQL_DB_PORT = "";
-// // const BASE_URL = "https://nodejs-production-b648.up.railway.app/api/usuario/";
 // const BASE_URL = "http://localhost:3007/api/usuario/";
 
 const getPdf = async ({ name, ssn }) => {
@@ -47,13 +43,27 @@ const getPdf = async ({ name, ssn }) => {
     return "Error: " + e.message;
   }
 };
+const getInfoUser = async ({ phone }) => {
+  try {
+    const { data } = await axios({
+      method: "GET",
+      url: BASE_URL + "byphone",
+      params: { phone },
+    });
+    // console.log("💻 - file: app.js:43 - getPdf - data:", data);
 
-const Op1 = addKeyword(
+    return data;
+  } catch (e) {
+    return "Error: " + e.message;
+  }
+};
+
+const Op1 = addKeyword([
   "1",
   "uno",
   "Recibir mi evaluacion",
-  "recibir mi evaluacion por whastapp"
-)
+  "recibir mi evaluacion por whastapp",
+])
   .addAnswer(
     "Porfavor Ingrese su Nombre y Apellidos",
     { capture: true },
@@ -97,14 +107,14 @@ const Op1 = addKeyword(
         });
         if (data) {
           console.log("💻 - se encontro informacion:", data.url_format);
-          return flowDynamic([
+          await flowDynamic([
             { media: data.url_format, body: "PDF" },
             {
               body: `Gracias ${data.firstName} ${data.lastName} por utilizar el Bot de Retina Care.`,
             },
           ]);
         } else {
-          return flowDynamic([
+          await flowDynamic([
             {
               body: `Estimado ${myState.name} No se encontraron sus datos.`,
             },
@@ -116,17 +126,49 @@ const Op1 = addKeyword(
 
         // return flowDynamic([{ media: data, body: "PDF" }]);
       } catch (error) {
-        return flowDynamic("Algo paso , consulte con un agente");
+        await flowDynamic("Algo paso , consulte con un agente");
       }
     }
   );
 
 const flujoPrincipal = addKeyword("saludo")
-  .addAnswer([
-    "🙌 Gracias por comunicarse con *Retina Care*",
-    "Servicio de Envío de Evaluaciones Médicas",
-    "diabetes.  Que desea hacer hoy?",
-  ])
+  .addAction(async (ctx, { flowDynamic, state }) => {
+    try {
+      let phone = "";
+      const text = ctx.from;
+      // const text = "17877877877";
+      if (text.charAt(0) === "1") {
+        phone = text.split("").slice(1).join("");
+        console.log(phone);
+      } else {
+        phone = text.split("").slice(2).join("");
+        console.log(phone);
+      }
+
+      const { data } = await getInfoUser({ phone });
+      // console.log(data);
+      if (data) {
+        await state.update({
+          url: data.url_format,
+          name: `${data.firstName} ${data.lastName}`,
+        });
+
+        await flowDynamic([
+          {
+            body: `Bienvenido *${data.firstName} ${data.lastName}*\n🙌 Gracias por comunicarse con *Retina Care*\nServicio de Envío de Evaluaciones Médicas\ndiabetes.  Que desea hacer hoy?`,
+          },
+        ]);
+      } else {
+        await flowDynamic([
+          {
+            body: `🙌 Gracias por comunicarse con *Retina Care*\nServicio de Envío de Evaluaciones Médicas\ndiabetes.  Que desea hacer hoy?`,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.log("[ERROR]", error);
+    }
+  })
   .addAnswer(
     [
       "Porfavor enviar el numero de su eleccion",
@@ -135,11 +177,26 @@ const flujoPrincipal = addKeyword("saludo")
       "3️⃣ Salir",
     ],
     { capture: true },
-    async (ctx, { fallBack }) => {
+    async (ctx, { fallBack, endFlow, flowDynamic, state }) => {
       if (!["1", "2", "3"].includes(ctx.body)) {
         return fallBack(
           `Porfavor Seleccione una opcion Correcta!!\n 1️⃣ Recibir mi evaluacion por whatssap\n 2️⃣ Hablar con alguien en recepcion\n 3️⃣ Salir`
         );
+      } else {
+        if (ctx.body == "1") {
+          const myState = state.getMyState();
+
+          if (state.getMyState()?.url) {
+            await flowDynamic("Validando Datos...");
+            await flowDynamic([
+              { media: myState.url, body: `PDF` },
+              {
+                body: `Gracias *${myState.name}* por utilizar el Bot de Retina Care.`,
+              },
+            ]);
+            return endFlow();
+          }
+        }
       }
     },
     [Op1]
